@@ -1,0 +1,25 @@
+---
+- hosts: fedora-docker
+  become: true
+  tasks:
+    - name: Install required Python packages
+      dnf:
+        name: python3-libdnf5
+        state: present
+    - name: Install Docker on Fedora
+      dnf:
+        name: docker
+        state: present
+
+    - name: Start Docker service
+      service:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Run Docker Compose up
+      command: docker-compose up -d
+      args:
+        chdir: /app
+      when: ansible_facts.packages.docker is defined 
+

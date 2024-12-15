@@ -1,0 +1,21 @@
+---
+- hosts: debian-docker
+  become: true
+  tasks:
+    - name: Install Docker on Debian
+      apt:
+        name: docker.io
+        state: present
+
+    - name: Start Docker service
+      service:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Run Docker Compose up
+      command: docker-compose up -d
+      args:
+        chdir: /app
+      when: ansible_facts.packages.docker.io is defined
+

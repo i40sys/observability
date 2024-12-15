@@ -1,0 +1,18 @@
+---
+- hosts: alpine-podman
+  become: true
+  tasks:
+    - name: Ensure Podman and related packages are installed
+      community.general.apk:
+        name:
+          - podman
+          - podman-compose
+        state: present
+        update_cache: yes
+
+    - name: Run Podman Compose up
+      command: podman-compose up -d
+      args:
+        chdir: /app
+      when: ansible_facts.packages.podman is defined
+

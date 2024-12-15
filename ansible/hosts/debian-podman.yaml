@@ -1,0 +1,15 @@
+---
+- hosts: debian-podman
+  become: true
+  tasks:
+    - name: Install Podman on Debian
+      apt:
+        name: podman
+        state: present
+
+    - name: Run Podman Compose up
+      command: podman-compose up -d
+      args:
+        chdir: /app
+      when: ansible_facts.packages.podman is defined
+
